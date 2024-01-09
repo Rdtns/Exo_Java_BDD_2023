@@ -8,7 +8,10 @@
 </head>
 <body>
     <h1>Exemple de connexion à MariaDB avec JSP</h1>
-    <% 
+
+    <!-- Exercice 1 : Les films entre 2000 et 2015 -->
+    <h2>Exercice 1 : Les films entre 2000 et 2015</h2>
+    <%
         String url = "jdbc:mariadb://localhost:3306/films";
         String user = "mysql";
         String password = "mysql";
@@ -18,6 +21,7 @@
 
         // Établir la connexion
         Connection conn = DriverManager.getConnection(url, user, password);
+
         // Exemple de requête SQL
         String sql = "SELECT idFilm, titre, année FROM Film WHERE année >= 2000";
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -29,7 +33,7 @@
             String colonne2 = rs.getString("titre");
             String colonne3 = rs.getString("année");
             // Faites ce que vous voulez avec les données...
-            //Exemple d'affichage de 2 colonnes
+            // Exemple d'affichage de 2 colonnes
             out.println("id : " + colonne1 + ", titre : " + colonne2 + ", année : " + colonne3 + "</br>");
         }
 
@@ -39,9 +43,7 @@
         conn.close();
     %>
 
-    <h2>Exercice 1 : Les films entre 2000 et 2015</h2>
-    <p>Extraire les films dont l'année est supérieur à l'année 2000 et inférieur à 2015.</p>
-
+    <!-- Exercice 2 : Année de recherche -->
     <h2>Exercice 2 : Année de recherche</h2>
     <form action="#" method="post">
         <label for="inputYear">Saisir une année :</label>
@@ -54,11 +56,14 @@
         if (yearToSearch != null && !yearToSearch.isEmpty()) {
             try {
                 int year = Integer.parseInt(yearToSearch);
+
+                // Modifier la requête SQL pour récupérer les films pour une année spécifique
                 String searchSQL = "SELECT idFilm, titre, année FROM Film WHERE année = ?";
                 PreparedStatement searchStmt = conn.prepareStatement(searchSQL);
                 searchStmt.setInt(1, year);
                 ResultSet searchResult = searchStmt.executeQuery();
 
+                // Afficher les résultats de la recherche
                 out.println("<p>Résultats de la recherche pour l'année " + year + " :</p>");
                 while (searchResult.next()) {
                     int idFilm = searchResult.getInt("idFilm");
@@ -67,6 +72,7 @@
                     out.println("ID : " + idFilm + ", Titre : " + titre + ", Année : " + annee + "<br>");
                 }
 
+                // Fermer les ressources
                 searchResult.close();
                 searchStmt.close();
             } catch (NumberFormatException | SQLException e) {
@@ -75,6 +81,7 @@
         }
     %>
 
+    <!-- Exercice 3 : Modification du titre du film -->
     <h2>Exercice 3 : Modification du titre du film</h2>
     <form action="#" method="post">
         <label for="inputFilmId">ID du film :</label>
@@ -101,7 +108,7 @@
                 if (rowsUpdated > 0) {
                     out.println("<p>Modification réussie pour le film avec l'ID " + idToUpdate + ".</p>");
                 } else {
-                    out.println("<p>Échec de la modification pour le film avec l'ID " + idToUpdate + ".</p>");
+                    out.println("<p>Aucune modification effectuée. Vérifiez l'ID du film.</p>");
                 }
 
                 updateStmt.close();
@@ -113,4 +120,3 @@
 
 </body>
 </html>
-
