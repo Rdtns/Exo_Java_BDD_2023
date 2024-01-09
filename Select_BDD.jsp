@@ -9,34 +9,34 @@
 <body>
     <h1>Exemple de connexion à MariaDB avec JSP</h1>
     <% 
-    String url = "jdbc:mariadb://localhost:3306/films";
-    String user = "mysql";
-    String password = "mysql";
+        String url = "jdbc:mariadb://localhost:3306/films";
+        String user = "mysql";
+        String password = "mysql";
 
-    // Charger le pilote JDBC (pilote disponible dans WEB-INF/lib)
-    Class.forName("org.mariadb.jdbc.Driver");
+        // Charger le pilote JDBC (pilote disponible dans WEB-INF/lib)
+        Class.forName("org.mariadb.jdbc.Driver");
 
-    // Établir la connexion
-    Connection conn = DriverManager.getConnection(url, user, password);
-    // Exemple de requête SQL
-    String sql = "SELECT idFilm, titre, année FROM Film WHERE année >= 2000";
-    PreparedStatement pstmt = conn.prepareStatement(sql);
-    ResultSet rs = pstmt.executeQuery();
+        // Établir la connexion
+        Connection conn = DriverManager.getConnection(url, user, password);
+        // Exemple de requête SQL
+        String sql = "SELECT idFilm, titre, année FROM Film WHERE année >= 2000";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        ResultSet rs = pstmt.executeQuery();
 
-    // Afficher les résultats (à adapter selon vos besoins)
-    while (rs.next()) {
-        String colonne1 = rs.getString("idFilm");
-        String colonne2 = rs.getString("titre");
-        String colonne3 = rs.getString("année");
-        // Faites ce que vous voulez avec les données...
-        //Exemple d'affichage de 2 colonnes
-        out.println("id : " + colonne1 + ", titre : " + colonne2 + ", année : " + colonne3 + "</br>");
-    }
+        // Afficher les résultats (à adapter selon vos besoins)
+        while (rs.next()) {
+            String colonne1 = rs.getString("idFilm");
+            String colonne2 = rs.getString("titre");
+            String colonne3 = rs.getString("année");
+            // Faites ce que vous voulez avec les données...
+            //Exemple d'affichage de 2 colonnes
+            out.println("id : " + colonne1 + ", titre : " + colonne2 + ", année : " + colonne3 + "</br>");
+        }
 
-    // Fermer les ressources 
-    rs.close();
-    pstmt.close();
-    conn.close();
+        // Fermer les ressources 
+        rs.close();
+        pstmt.close();
+        conn.close();
     %>
 
     <h2>Exercice 1 : Les films entre 2000 et 2015</h2>
@@ -100,4 +100,17 @@
 
                 if (rowsUpdated > 0) {
                     out.println("<p>Modification réussie pour le film avec l'ID " + idToUpdate + ".</p>");
-                } else
+                } else {
+                    out.println("<p>Échec de la modification pour le film avec l'ID " + idToUpdate + ".</p>");
+                }
+
+                updateStmt.close();
+            } catch (NumberFormatException | SQLException e) {
+                e.printStackTrace();
+            }
+        }
+    %>
+
+</body>
+</html>
+
